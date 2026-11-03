@@ -9,4 +9,13 @@ int number = (int)2026;
 int age = number - year;
 Console.WriteLine($"{firstName} {secondName} возраст: {age}");
 
-string[] todos;
+string[] todos = new string[2];
+while (true)
+{
+    Console.Write("Введите команду: ");
+    string input = Console.ReadLine();
+    if (string.IsNullOrWhiteSpace(input)) continue;
+
+    string parts = input.Split(' ', 2);
+    string command = parts.ToLower();
+}
