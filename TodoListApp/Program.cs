@@ -8,3 +8,5 @@ int year = int.Parse(Console.ReadLine());
 int number = (int)2026;
 int age = number - year;
 Console.WriteLine($"{firstName} {secondName} возраст: {age}");
+
+string[] todos;
