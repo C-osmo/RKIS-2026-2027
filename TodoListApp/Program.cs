@@ -1,4 +1,5 @@
 ﻿using System;
+
 Console.WriteLine("Работу выполнили Деркач и Остапенко");
 Console.WriteLine("Введите вашу фамилию");
 String firstName = Console.ReadLine();
@@ -12,6 +13,26 @@ Console.WriteLine($"{firstName} {secondName} возраст: {age}");
 
 string[] todos = new string[2];
 int taskCount = 0;
+bool[] statuses = new bool[todos.Length];
+DateTime[] dates = new DateTime[todos.Length];
+static void ExtendArrays(
+    string[] todos,
+    bool[] statuses,
+    DateTime[] dates,
+    out string[] newTodos,
+    out bool[] newStatuses,
+    out DateTime[] newDates)
+{
+    int newSize = todos.Length * 2;
+
+    newTodos = new string[newSize];
+    newStatuses = new bool[newSize];
+    newDates = new DateTime[newSize];
+
+    Array.Copy(todos, newTodos, todos.Length);
+    Array.Copy(statuses, newStatuses, statuses.Length);
+    Array.Copy(dates, newDates, dates.Length);
+}
 
 while (true)
 {
@@ -21,19 +42,19 @@ while (true)
 
     string[] parts = input.Split(' ', 2);
     string command = parts[0].ToLower();
-
+    
+    
     switch (command)
     {
         case "help":
-            Console.WriteLine("help — список команд");
-            Console.WriteLine("profile — данные пользователя");
-            Console.WriteLine("add \"задача\" — добавить задачу");
-            Console.WriteLine("view — показать задачи");
-            Console.WriteLine("exit — выход");
-  
+
+            Console.WriteLine("     help — список команд");
+            Console.WriteLine("     profile — данные пользователя");
+            Console.WriteLine("     add \"задача\" — добавить задачу");
+            Console.WriteLine("     view — показать задачи");
+            Console.WriteLine("     exit — выход");
             break;
 
-        
         case "add":
             if (parts.Length < 2)
                 {
@@ -44,22 +65,36 @@ while (true)
 
             if (taskCount >= todos.Length)
                 {
-                    string[] newTodos = new string[todos.Length * 2];
-                        for (int i = 0; i < todos.Length; i++)
-                        {
-                            newTodos[i] = todos[i];
-                        }
-                        todos = newTodos;
-                }
 
-                todos[taskCount++] = task;
+                ExtendArrays(todos, statuses, dates, out todos, out statuses, out dates);
+            }
+
+                todos[taskCount] = task;
+                statuses[taskCount] = false;
+                dates[taskCount] = DateTime.Now;
+                taskCount++;
                 Console.WriteLine("Задача добавлена.");
                 break;
 
         case "profile":
             Console.WriteLine($"{firstName} {secondName} возраст: {age}");
             break;
-        
+        case "done":
+            if (parts.Length < 2)
+            {
+                Console.WriteLine("Индекс не введен");
+                 break;
+            }
+            if (!int.TryParse(parts[1], out int idx))
+            {
+                Console.WriteLine("Ошибка: номер задачи должен быть числом.");
+                break;
+            }
+            int index = idx - 1;
+            statuses[index] = true;
+            dates[index] = DateTime.Now;
+            break;
+
         case "view":
             if (taskCount == 0)
             {
@@ -69,7 +104,7 @@ while (true)
             {
                 for (int i = 0; i < taskCount; i++)
                 {
-                    Console.WriteLine($"{i + 1}. {todos[i]}");
+                    Console.WriteLine($"{i + 1}. {todos[i]} {statuses[i]} {dates[i]}");
                 }
             }
             break;
@@ -77,7 +112,8 @@ while (true)
         case "exit":
             Console.WriteLine("Завершение программы...");
             return;
-        
+       
+
         default:
             Console.WriteLine("Неизвестная комманда. Введите help, для отображения списка команд");
             break;
