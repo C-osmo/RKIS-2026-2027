@@ -1,4 +1,5 @@
-﻿Console.WriteLine("Работу выполнили Деркач и Остапенко");
+﻿using System;
+Console.WriteLine("Работу выполнили Деркач и Остапенко");
 Console.WriteLine("Введите вашу фамилию");
 String firstName = Console.ReadLine();
 Console.WriteLine("Введите ваше имя");
@@ -18,14 +19,20 @@ while (true)
     string input = Console.ReadLine();
     if (string.IsNullOrWhiteSpace(input)) continue;
 
-    string parts = input.Split(' ', 2);
-    string command = parts.ToLower();
+    string[] parts = input.Split(' ', 2);
+    string command = parts[0].ToLower();
 
     switch (command)
     {
         case "help":
-            Console.WriteLine("help — список команд; profile — данные пользователя; add \"задача\" — добавить задачу; view — показать задачи; exit — выход");
+            Console.WriteLine("help — список команд");
+            Console.WriteLine("profile — данные пользователя");
+            Console.WriteLine("add \"задача\" — добавить задачу");
+            Console.WriteLine("view — показать задачи");
+            Console.WriteLine("exit — выход");
+  
             break;
+
         
         case "add":
             if (parts.Length < 2)
@@ -33,11 +40,11 @@ while (true)
                     Console.WriteLine("Ошибка: укажите текст задачи в кавычках. Формат: add \"текст задачи\"");
                     break;
                 }
-                string task = parts.Trim('"');
+                string task = input.Substring(4).Trim('"');
 
             if (taskCount >= todos.Length)
                 {
-                    string newTodos = new string[todos.Length * 2];
+                    string[] newTodos = new string[todos.Length * 2];
                         for (int i = 0; i < todos.Length; i++)
                         {
                             newTodos[i] = todos[i];
