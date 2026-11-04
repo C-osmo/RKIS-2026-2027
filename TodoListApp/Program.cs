@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data;
 
 Console.WriteLine("Работу выполнили Деркач и Остапенко");
 Console.WriteLine("Введите вашу фамилию");
@@ -40,7 +41,7 @@ while (true)
     string input = Console.ReadLine();
     if (string.IsNullOrWhiteSpace(input)) continue;
 
-    string[] parts = input.Split(' ', 2);
+    string[] parts = input.Split(' ', 3);
     string command = parts[0].ToLower();
     
     
@@ -53,6 +54,8 @@ while (true)
             Console.WriteLine("     add \"задача\" — добавить задачу");
             Console.WriteLine("     view — показать задачи");
             Console.WriteLine("     exit — выход");
+            Console.WriteLine("     done < idx > — отмечает задачу выполненной");
+            Console.WriteLine("     update < idx > \"new_text\" обновляет текст задачи");
             break;
 
         case "add":
@@ -112,8 +115,55 @@ while (true)
         case "exit":
             Console.WriteLine("Завершение программы...");
             return;
-       
+        case "delete":
+            if (parts.Length < 2)
+            {
+                Console.WriteLine("Индекс не введен");
+                break;
+            }
+            if (!int.TryParse(parts[1], out  int id))
+            {
+                Console.WriteLine("Ошибка: номер задачи должен быть числом.");
+                break;
+            }
+            
+           
+            if (!int.TryParse(parts[1], out  id))
+            {
+                Console.WriteLine("Ошибка: номер задачи должен быть числом.");
+                break;
+            }
+            int indexDelete = id - 1;
+            for (int i = indexDelete; i < taskCount - 1; i++)
+            {
+                todos[i] = todos[i + 1];
+                statuses[i] = statuses[i + 1];
+                dates[i] = dates[i + 1];
+               
+            } 
+            taskCount--;
+                break;
+        case "update":
+            if (parts.Length < 3)
+            {
+                Console.WriteLine("Неверный ввод , чего то не хватает");
+                break;
+            }
+            if (!int.TryParse(parts[1], out id))
+            {
+                Console.WriteLine("Ошибка: номер задачи должен быть числом.");
+                break;
+            }
 
+            if (string.IsNullOrWhiteSpace(parts[2]))
+            {
+                Console.WriteLine("Текст задачи не может быть пустым.");
+                break;
+            }
+            int indexUpdate = id - 1;
+            todos[indexUpdate] = parts[2];
+            dates[indexUpdate] = DateTime.Now;
+            break;
         default:
             Console.WriteLine("Неизвестная комманда. Введите help, для отображения списка команд");
             break;
